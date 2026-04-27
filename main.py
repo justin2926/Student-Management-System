@@ -47,17 +47,51 @@ students_table.place(x=130, y=150)
 
 student_first_label = ttk.Label(students_tab, text="First Name:")
 student_first_label.pack(padx=10, pady=2)
+student_first_label.place(x=30, y=30)
 
 student_first_entry = tk.StringVar()
 student_first = ttk.Entry(students_tab, textvariable=student_first_entry, width=20)
 student_first.pack(padx=10, pady=2)
+student_first.place(x=110, y=27)
 
 student_last_label = ttk.Label(students_tab, text="Last Name:")
-student_last_label.pack(padx=10, pady=2)
+student_last_label.pack(side="left", padx=10, pady=2)
+student_last_label.place(x=30, y=73)
 
 student_last_entry = tk.StringVar()
 student_last = ttk.Entry(students_tab, textvariable=student_last_entry, width=20)
-student_last.pack(padx=10, pady=2)
+student_last.pack(side="left", padx=10, pady=2)
+student_last.place(x=110, y=70)
+
+student_id_label = ttk.Label(students_tab, text="Student ID:")
+student_id_label.pack(side="left", padx=10, pady=2)
+student_id_label.place(x=365, y=73)
+
+student_id_entry = tk.StringVar()
+student_id = ttk.Entry(students_tab, textvariable=student_id_entry, width=20)
+student_id.pack(side="left", padx=10, pady=2)
+student_id.place(x=440, y=70)
+
+major_label = ttk.Label(students_tab, text="Major:")
+major_label.pack(side="left", padx=10, pady=2)
+major_label.place(x=395, y=30)
+
+major_entry = tk.StringVar()
+major = ttk.Entry(students_tab, textvariable=major_entry, width=20)
+major.pack(side="left", padx=10, pady=2)
+major.place(x=440, y=27)
+
+add_student_button = ttk.Button(students_tab, text="Add Student")
+add_student_button.pack(padx=10, pady=5)
+add_student_button.place(x=120, y=110)
+
+delete_student_button = ttk.Button(students_tab, text="Delete Student")
+delete_student_button.pack(padx=10, pady=5)
+delete_student_button.place(x=250, y=110)
+
+update_student_button = ttk.Button(students_tab, text="Update Student")
+update_student_button.pack(padx=10, pady=5)
+update_student_button.place(x=395, y=110)
 
 # courses tab
 courses_table = ttk.Treeview(courses_tab, columns=("course_id", "department_id", "course_name", "credits"), show = "headings", height=8)
@@ -78,6 +112,54 @@ courses_table.column("credits", width=50)
 
 courses_table.place(x=130, y=150)
 
+course_id_label = ttk.Label(courses_tab, text="Course ID:")
+course_id_label.pack(padx=10, pady=2)
+course_id_label.place(x=30, y=30)
+
+course_id_entry = tk.StringVar()
+course_id = ttk.Entry(courses_tab, textvariable=course_id_entry, width=20)
+course_id.pack(padx=10, pady=2)
+course_id.place(x=110, y=27)
+
+department_id_label = ttk.Label(courses_tab, text="Department ID:")
+department_id_label.pack(side="left", padx=10, pady=2)
+department_id_label.place(x=10, y=73)
+
+department_id_entry = tk.StringVar()
+department_id = ttk.Entry(courses_tab, textvariable=department_id_entry, width=20)
+department_id.pack(side="left", padx=10, pady=2)
+department_id.place(x=110, y=70)
+
+course_name_label = ttk.Label(courses_tab, text="Course Name:")
+course_name_label.pack(side="left", padx=10, pady=2)
+course_name_label.place(x=345, y=73)
+
+course_name_entry = tk.StringVar()
+course_name = ttk.Entry(courses_tab, textvariable=course_name_entry, width=20)
+course_name.pack(side="left", padx=10, pady=2)
+course_name.place(x=440, y=70)
+
+credits_label = ttk.Label(courses_tab, text="Credits:")
+credits_label.pack(side="left", padx=10, pady=2)
+credits_label.place(x=385, y=30)
+
+credits_entry = tk.StringVar()
+credits = ttk.Entry(courses_tab, textvariable=credits_entry, width=20)
+credits.pack(side="left", padx=10, pady=2)
+credits.place(x=440, y=27)
+
+add_course_button = ttk.Button(courses_tab, text="Add Course")
+add_course_button.pack(padx=10, pady=5)
+add_course_button.place(x=120, y=110)
+
+delete_course_button = ttk.Button(courses_tab, text="Delete Course")
+delete_course_button.pack(padx=10, pady=5)
+delete_course_button.place(x=250, y=110)
+
+update_course_button = ttk.Button(courses_tab, text="Update Course")
+update_course_button.pack(padx=10, pady=5)
+update_course_button.place(x=395, y=110)
+
 # instructors tab
 instructors_table = ttk.Treeview(instructors_tab, columns=("instructor_id", "department_id", "first_name", "last_name"), show = "headings", height=8)
 
@@ -96,6 +178,54 @@ instructors_table.heading("last_name", text="Last Name")
 instructors_table.column("last_name", width=150)
 
 instructors_table.place(x=110, y=150)
+
+instructor_id_label = ttk.Label(instructors_tab, text="Instructor ID:")
+instructor_id_label.pack(padx=10, pady=2)
+instructor_id_label.place(x=30, y=30)
+
+instructor_id_entry = tk.StringVar()
+instructor_id = ttk.Entry(instructors_tab, textvariable=instructor_id_entry, width=20)
+instructor_id.pack(padx=10, pady=2)
+instructor_id.place(x=110, y=27)
+
+department_id_label = ttk.Label(instructors_tab, text="Department ID:")
+department_id_label.pack(side="left", padx=10, pady=2)
+department_id_label.place(x=10, y=73)
+
+department_id_entry = tk.StringVar()
+department_id = ttk.Entry(instructors_tab, textvariable=department_id_entry, width=20)
+department_id.pack(side="left", padx=10, pady=2)
+department_id.place(x=110, y=70)
+
+instructor_first_label = ttk.Label(instructors_tab, text="First Name:")
+instructor_first_label.pack(side="left", padx=10, pady=2)
+instructor_first_label.place(x=345, y=73)
+
+instructor_first_entry = tk.StringVar()
+instructor_first = ttk.Entry(instructors_tab, textvariable=instructor_first_entry, width=20)
+instructor_first.pack(side="left", padx=10, pady=2)
+instructor_first.place(x=440, y=70)
+
+instructor_last_label = ttk.Label(instructors_tab, text="Last Name:")
+instructor_last_label.pack(side="left", padx=10, pady=2)
+instructor_last_label.place(x=385, y=30)
+
+instructor_last_entry = tk.StringVar()
+instructor_last = ttk.Entry(instructors_tab, textvariable=credits_entry, width=20)
+instructor_last.pack(side="left", padx=10, pady=2)
+instructor_last.place(x=440, y=27)
+
+add_instructor_button = ttk.Button(instructors_tab, text="Add Instructor")
+add_instructor_button.pack(padx=10, pady=5)
+add_instructor_button.place(x=120, y=110)
+
+delete_instructor_button = ttk.Button(instructors_tab, text="Delete Instructor")
+delete_instructor_button.pack(padx=10, pady=5)
+delete_instructor_button.place(x=250, y=110)
+
+update_instructor_button = ttk.Button(instructors_tab, text="Update Instructor")
+update_instructor_button.pack(padx=10, pady=5)
+update_instructor_button.place(x=395, y=110)
 
 # departments tab
 departments_table = ttk.Treeview(departments_tab, columns=("department_id", "department_name", "location"), show = "headings", height=8)
