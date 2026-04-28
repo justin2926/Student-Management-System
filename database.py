@@ -241,6 +241,7 @@ def delete_student(student_id):
     con = get_connection()
     cur = con.cursor()
 
+    cur.execute("DELETE FROM Enrolls WHERE StudentID = ?", (student_id,))
     cur.execute("DELETE FROM Students WHERE StudentID = ?", (student_id,))
 
     con.commit()

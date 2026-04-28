@@ -80,6 +80,12 @@ major.place(x=440, y=27)
 
 def handle_add_student():
     add_student(student_id_entry.get(), student_first_entry.get(), student_last_entry.get(), major_entry.get())
+
+    student_first_entry.set("")
+    student_last_entry.set("")
+    student_id_entry.set("")
+    major_entry.set("")
+
     refresh_students_table()
     refresh_overview_table()
 
@@ -88,6 +94,9 @@ add_student_button.place(x=120, y=110)
 
 def handle_delete_student():
     delete_student(student_id_entry.get())
+
+    student_id_entry.set("")
+
     refresh_students_table()
     refresh_overview_table()
 
