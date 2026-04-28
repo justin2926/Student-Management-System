@@ -105,6 +105,12 @@ delete_student_button.place(x=250, y=110)
 
 def handle_update_student():
     update_student(student_id_entry.get(), student_first_entry.get(), student_last_entry.get(), major_entry.get())
+
+    student_first_entry.set("")
+    student_last_entry.set("")
+    student_id_entry.set("")
+    major_entry.set("")
+
     refresh_students_table()
     refresh_overview_table()
 
@@ -158,6 +164,12 @@ credits.place(x=440, y=27)
 
 def handle_add_course():
     add_course(course_id_entry.get(), department_id_entry.get(), course_name_entry.get(), credits_entry.get())
+
+    course_id_entry.set("")
+    department_id_entry.set("")
+    course_name_entry.set("")
+    credits_entry.set("")
+
     refresh_courses_table()
     refresh_overview_table()
 
@@ -166,6 +178,9 @@ add_course_button.place(x=120, y=110)
 
 def handle_delete_course():
     delete_course(course_id_entry.get())
+
+    course_id_entry.set("")
+
     refresh_courses_table()
     refresh_overview_table()
 
@@ -174,6 +189,12 @@ delete_course_button.place(x=250, y=110)
 
 def handle_update_course():
     update_course(course_id_entry.get(), department_id_entry.get(), course_name_entry.get(), credits_entry.get())
+
+    course_id_entry.set("")
+    department_id_entry.set("")
+    course_name_entry.set("")
+    credits_entry.set("")
+
     refresh_courses_table()
     refresh_overview_table()
 
@@ -227,6 +248,12 @@ instructor_last.place(x=440, y=27)
 
 def handle_add_instructor():
     add_instructor(instructor_id_entry.get(), instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get())
+
+    instructor_id_entry.set("")
+    instructor_department_id_entry.set("")
+    instructor_first_entry.set("")
+    instructor_last_entry.set("")
+
     refresh_instructors_table()
     refresh_overview_table()
 
@@ -235,6 +262,9 @@ add_instructor_button.place(x=120, y=110)
 
 def handle_delete_instructor():
     delete_instructor(instructor_id_entry.get())
+
+    instructor_id_entry.set("")
+
     refresh_instructors_table()
     refresh_overview_table()
 
@@ -243,6 +273,12 @@ delete_instructor_button.place(x=250, y=110)
 
 def handle_update_instructor():
     update_instructor(instructor_id_entry.get(), instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get())
+
+    instructor_id_entry.set("")
+    instructor_department_id_entry.set("")
+    instructor_first_entry.set("")
+    instructor_last_entry.set("")
+
     refresh_instructors_table()
     refresh_overview_table()
 
@@ -301,6 +337,12 @@ grade.place(x=440, y=70)
 
 def handle_add_enrollment():
     add_enrollment(enrollment_id_entry.get(), enrollment_course_id_entry.get(), enrollment_student_id_entry.get(), grade_entry.get())
+
+    enrollment_id_entry.set("")
+    enrollment_course_id_entry.set("")
+    enrollment_student_id_entry.set("")
+    grade_entry.set("")
+
     refresh_enrollments_table()
     refresh_overview_table()
 
@@ -309,6 +351,9 @@ add_enrollment_button.place(x=105, y=110)
 
 def handle_delete_enrollment():
     delete_enrollment(enrollment_id_entry.get())
+
+    enrollment_id_entry.set("")
+
     refresh_enrollments_table()
     refresh_overview_table()
 
@@ -317,6 +362,12 @@ delete_enrollment_button.place(x=245, y=110)
 
 def handle_update_enrollment():
     update_enrollment(enrollment_id_entry.get(), enrollment_course_id_entry.get(), enrollment_student_id_entry.get(), grade_entry.get())
+
+    enrollment_id_entry.set("")
+    enrollment_course_id_entry.set("")
+    enrollment_student_id_entry.set("")
+    grade_entry.set("")
+
     refresh_enrollments_table()
     refresh_overview_table()
 
@@ -355,6 +406,10 @@ teaches_course_id.place(x=440, y=27)
 
 def handle_add_teaches():
     add_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+
+    teaches_instructor_id_entry.set("")
+    teaches_course_id_entry.set("")
+
     refresh_teaches_table()
     refresh_overview_table()
 
@@ -363,6 +418,10 @@ add_teaches_button.place(x=120, y=110)
 
 def handle_delete_teaches():
     delete_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+
+    teaches_instructor_id_entry.set("")
+    teaches_course_id_entry.set("")
+
     refresh_teaches_table()
     refresh_overview_table()
 
@@ -371,6 +430,10 @@ delete_teaches_button.place(x=260, y=110)
 
 def handle_update_teaches():
     update_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+
+    teaches_instructor_id_entry.set("")
+    teaches_course_id_entry.set("")
+
     refresh_teaches_table()
     refresh_overview_table()
 
