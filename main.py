@@ -6,6 +6,8 @@ root = tk.Tk()
 root.title("Student Management System")
 root.geometry("700x500+550+150") 
 
+
+
 title = ttk.Label(root, text="Student Management System", font=("Arial", 24))
 title.pack(padx=20,pady=20)
 
@@ -25,6 +27,9 @@ tabControl.add(enrollments_tab, text='Enrollments')
 tabControl.add(departments_tab, text="Departments")
 
 tabControl.pack(expand=1, fill="both")
+
+s = ttk.Style(root)
+s.configure("TNotebook", tabposition='n')
 
 # students tab
 students_table = ttk.Treeview(students_tab, columns=("student_id", "first_name", "last_name", "major"), show = "headings", height=10)
@@ -166,16 +171,16 @@ instructors_table = ttk.Treeview(instructors_tab, columns=("instructor_id", "dep
 style = ttk.Style()
 
 instructors_table.heading("instructor_id", text="Instructor ID")
-instructors_table.column("instructor_id", width=172)
+instructors_table.column("instructor_id", width=172, anchor="center")
 
 instructors_table.heading("department_id", text="Department ID")
-instructors_table.column("department_id", width=172)
+instructors_table.column("department_id", width=172, anchor="center")
 
 instructors_table.heading("first_name", text="First Name")
-instructors_table.column("first_name", width=172)
+instructors_table.column("first_name", width=172, anchor="center")
 
 instructors_table.heading("last_name", text="Last Name")
-instructors_table.column("last_name", width=172)
+instructors_table.column("last_name", width=172, anchor="center")
 
 instructors_table.place(y=150)
 
@@ -233,13 +238,13 @@ departments_table = ttk.Treeview(departments_tab, columns=("department_id", "dep
 style = ttk.Style()
 
 departments_table.heading("department_id", text="Department ID")
-departments_table.column("department_id", width=233)
+departments_table.column("department_id", width=233, anchor="center")
 
 departments_table.heading("department_name", text="Department Name")
-departments_table.column("department_name", width=233)
+departments_table.column("department_name", width=233, anchor="center")
 
 departments_table.heading("location", text="Location")
-departments_table.column("location", width=233)
+departments_table.column("location", width=233, anchor="center")
 
 departments_table.place(y=150)
 
@@ -249,16 +254,16 @@ enrollments_table = ttk.Treeview(enrollments_tab, columns=("enrollment_id", "cou
 style = ttk.Style()
 
 enrollments_table.heading("enrollment_id", text="Enrollment ID")
-enrollments_table.column("enrollment_id", width=172)
+enrollments_table.column("enrollment_id", width=172, anchor="center")
 
 enrollments_table.heading("course_id", text="Course ID")
-enrollments_table.column("course_id", width=172)
+enrollments_table.column("course_id", width=172, anchor="center")
 
 enrollments_table.heading("student_id", text="Student ID")
-enrollments_table.column("student_id", width=172)
+enrollments_table.column("student_id", width=172, anchor="center")
 
 enrollments_table.heading("grade", text="Grade")
-enrollments_table.column("grade", width=172)
+enrollments_table.column("grade", width=172, anchor="center")
 
 enrollments_table.place(y=150)
 
@@ -283,18 +288,20 @@ def refresh_instructors_table():
     for i in view_instructors():
         instructors_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
 
-# def refresh_departments_table():
-#     for i in departments_table.get_children():
-#         departments_table.delete(i)
+def refresh_enrollments_table():
+    for i in enrollments_table.get_children():
+        enrollments_table.delete(i)
 
-#     for i in view():
-#         departments_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
+    for i in view_enrollments():
+        enrollments_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
 
 get_connection()
 create_tables()
 sample_data_insertion()
+
 refresh_students_table()
 refresh_courses_table()
 refresh_instructors_table()
+refresh_enrollments_table()
 
 root.mainloop()
