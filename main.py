@@ -78,13 +78,28 @@ major_entry = tk.StringVar()
 major = ttk.Entry(students_tab, textvariable=major_entry, width=20)
 major.place(x=440, y=27)
 
-add_student_button = ttk.Button(students_tab, text="Add Student")
+def handle_add_student():
+    add_student(student_id_entry.get(), student_first_entry.get(), student_last_entry.get(), major_entry.get())
+    refresh_students_table()
+    refresh_overview_table()
+
+add_student_button = ttk.Button(students_tab, text="Add Student", command=handle_add_student)
 add_student_button.place(x=120, y=110)
 
-delete_student_button = ttk.Button(students_tab, text="Delete Student")
+def handle_delete_student():
+    delete_student(student_id_entry.get())
+    refresh_students_table()
+    refresh_overview_table()
+
+delete_student_button = ttk.Button(students_tab, text="Delete Student", command=handle_delete_student)
 delete_student_button.place(x=250, y=110)
 
-update_student_button = ttk.Button(students_tab, text="Update Student")
+def handle_update_student():
+    update_student(student_id_entry.get(), student_first_entry.get(), student_last_entry.get(), major_entry.get())
+    refresh_students_table()
+    refresh_overview_table()
+
+update_student_button = ttk.Button(students_tab, text="Update Student", command=handle_update_student)
 update_student_button.place(x=395, y=110)
 
 # courses tab
@@ -132,13 +147,28 @@ credits_entry = tk.StringVar()
 credits = ttk.Entry(courses_tab, textvariable=credits_entry, width=20)
 credits.place(x=440, y=27)
 
-add_course_button = ttk.Button(courses_tab, text="Add Course")
+def handle_add_course():
+    add_course(course_id_entry.get(), department_id_entry.get(), course_name_entry.get(), credits_entry.get())
+    refresh_courses_table()
+    refresh_overview_table()
+
+add_course_button = ttk.Button(courses_tab, text="Add Course", command=handle_add_course)
 add_course_button.place(x=120, y=110)
 
-delete_course_button = ttk.Button(courses_tab, text="Delete Course")
+def handle_delete_course():
+    delete_course(course_id_entry.get())
+    refresh_courses_table()
+    refresh_overview_table()
+
+delete_course_button = ttk.Button(courses_tab, text="Delete Course", command=handle_delete_course)
 delete_course_button.place(x=250, y=110)
 
-update_course_button = ttk.Button(courses_tab, text="Update Course")
+def handle_update_course():
+    update_course(course_id_entry.get(), department_id_entry.get(), course_name_entry.get(), credits_entry.get())
+    refresh_courses_table()
+    refresh_overview_table()
+
+update_course_button = ttk.Button(courses_tab, text="Update Course", command=handle_update_course)
 update_course_button.place(x=395, y=110)
 
 # instructors tab
@@ -186,13 +216,28 @@ instructor_last_entry = tk.StringVar()
 instructor_last = ttk.Entry(instructors_tab, textvariable=instructor_last_entry, width=20)
 instructor_last.place(x=440, y=27)
 
-add_instructor_button = ttk.Button(instructors_tab, text="Add Instructor")
+def handle_add_instructor():
+    add_instructor(instructor_id_entry.get(), instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get())
+    refresh_instructors_table()
+    refresh_overview_table()
+
+add_instructor_button = ttk.Button(instructors_tab, text="Add Instructor", command=handle_add_instructor)
 add_instructor_button.place(x=120, y=110)
 
-delete_instructor_button = ttk.Button(instructors_tab, text="Delete Instructor")
+def handle_delete_instructor():
+    delete_instructor(instructor_id_entry.get())
+    refresh_instructors_table()
+    refresh_overview_table()
+
+delete_instructor_button = ttk.Button(instructors_tab, text="Delete Instructor", command=handle_delete_instructor)
 delete_instructor_button.place(x=250, y=110)
 
-update_instructor_button = ttk.Button(instructors_tab, text="Update Instructor")
+def handle_update_instructor():
+    update_instructor(instructor_id_entry.get(), instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get())
+    refresh_instructors_table()
+    refresh_overview_table()
+
+update_instructor_button = ttk.Button(instructors_tab, text="Update Instructor", command=handle_update_instructor)
 update_instructor_button.place(x=395, y=110)
 
 # departments tab
