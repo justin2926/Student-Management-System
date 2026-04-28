@@ -455,3 +455,29 @@ def view_instructor_courses():
 
     con.close()
     return rows
+
+# added another join query
+def view_overview():
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT
+            Students.StudentID,
+            Students.FirstName || ' ' || Students.LastName AS StudentName,
+            Courses.CourseID,
+            Courses.CourseName,
+            Instructor.InstructorID,
+            Instructor.FirstName || ' ' || Instructor.LastName AS InstructorName,
+            Students.Major,
+            Enrolls.Grade
+        FROM Enrolls
+        JOIN Students ON Enrolls.StudentID = Students.StudentID
+        JOIN Courses ON Enrolls.CourseID = Courses.CourseID
+        LEFT JOIN Teaches ON Courses.CourseID = Teaches.CourseID
+        LEFT JOIN Instructor ON Teaches.InstructorID = Instructor.InstructorID
+    """)
+
+    rows = cur.fetchall()
+    con.close()
+    return rows
