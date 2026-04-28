@@ -15,14 +15,14 @@ tabControl = ttk.Notebook(root)
 students_tab = ttk.Frame(tabControl)
 courses_tab = ttk.Frame(tabControl)
 instructors_tab = ttk.Frame(tabControl)
-# enrollments_tab = ttk.Frame(tabControl)
-# departments_tab = ttk.Frame(tabControl)
+enrollments_tab = ttk.Frame(tabControl)
+teaches_tab = ttk.Frame(tabControl)
 
 tabControl.add(students_tab, text='Students')
 tabControl.add(courses_tab, text='Courses')
 tabControl.add(instructors_tab, text='Instructors')
-# tabControl.add(enrollments_tab, text='Enrollments')
-# tabControl.add(departments_tab, text="Departments")
+tabControl.add(enrollments_tab, text='Enrollments')
+tabControl.add(teaches_tab, text='Teaches')
 
 # added 
 overview_tab = ttk.Frame(tabControl)
@@ -189,7 +189,7 @@ instructors_table.column("last_name", width=172, anchor="center")
 instructors_table.place(y=150)
 
 instructor_id_label = ttk.Label(instructors_tab, text="Instructor ID:")
-instructor_id_label.place(x=30, y=30)
+instructor_id_label.place(x=20, y=30)
 
 instructor_id_entry = tk.StringVar()
 instructor_id = ttk.Entry(instructors_tab, textvariable=instructor_id_entry, width=20)
@@ -203,14 +203,14 @@ instructor_department_id = ttk.Entry(instructors_tab, textvariable=instructor_de
 instructor_department_id.place(x=110, y=70)
 
 instructor_first_label = ttk.Label(instructors_tab, text="First Name:")
-instructor_first_label.place(x=345, y=73)
+instructor_first_label.place(x=365, y=73)
 
 instructor_first_entry = tk.StringVar()
 instructor_first = ttk.Entry(instructors_tab, textvariable=instructor_first_entry, width=20)
 instructor_first.place(x=440, y=70)
 
 instructor_last_label = ttk.Label(instructors_tab, text="Last Name:")
-instructor_last_label.place(x=385, y=30)
+instructor_last_label.place(x=365, y=30)
 
 instructor_last_entry = tk.StringVar()
 instructor_last = ttk.Entry(instructors_tab, textvariable=instructor_last_entry, width=20)
@@ -240,11 +240,133 @@ def handle_update_instructor():
 update_instructor_button = ttk.Button(instructors_tab, text="Update Instructor", command=handle_update_instructor)
 update_instructor_button.place(x=395, y=110)
 
-# departments tab
-# Removed from UI and replaced with Overview tab
-
 # enrollments table
-# Removed from UI and replaced with Overview tab
+enrollments_table = ttk.Treeview(
+    enrollments_tab,
+    columns=("enrollment_id", "course_id", "student_id", "grade"),
+    show="headings",
+    height=10
+)
+
+enrollments_table.heading("enrollment_id", text="Enrollment ID")
+enrollments_table.column("enrollment_id", width=172, anchor="center")
+
+enrollments_table.heading("course_id", text="Course ID")
+enrollments_table.column("course_id", width=172, anchor="center")
+
+enrollments_table.heading("student_id", text="Student ID")
+enrollments_table.column("student_id", width=172, anchor="center")
+
+enrollments_table.heading("grade", text="Grade")
+enrollments_table.column("grade", width=172, anchor="center")
+
+enrollments_table.place(y=150)
+
+enrollment_id_label = ttk.Label(enrollments_tab, text="Enrollment ID:")
+enrollment_id_label.place(x=20, y=30)
+
+enrollment_id_entry = tk.StringVar()
+enrollment_id = ttk.Entry(enrollments_tab, textvariable=enrollment_id_entry, width=20)
+enrollment_id.place(x=110, y=27)
+
+enrollment_course_id_label = ttk.Label(enrollments_tab, text="Course ID:")
+enrollment_course_id_label.place(x=35, y=73)
+
+enrollment_course_id_entry = tk.StringVar()
+enrollment_course_id = ttk.Entry(enrollments_tab, textvariable=enrollment_course_id_entry, width=20)
+enrollment_course_id.place(x=110, y=70)
+
+enrollment_student_id_label = ttk.Label(enrollments_tab, text="Student ID:")
+enrollment_student_id_label.place(x=372, y=30)
+
+enrollment_student_id_entry = tk.StringVar()
+enrollment_student_id = ttk.Entry(enrollments_tab, textvariable=enrollment_student_id_entry, width=20)
+enrollment_student_id.place(x=440, y=27)
+
+grade_label = ttk.Label(enrollments_tab, text="Grade:")
+grade_label.place(x=395, y=73)
+
+grade_entry = tk.StringVar()
+grade = ttk.Entry(enrollments_tab, textvariable=grade_entry, width=20)
+grade.place(x=440, y=70)
+
+def handle_add_enrollment():
+    add_enrollment(enrollment_id_entry.get(), enrollment_course_id_entry.get(), enrollment_student_id_entry.get(), grade_entry.get())
+    refresh_enrollments_table()
+    refresh_overview_table()
+
+add_enrollment_button = ttk.Button(enrollments_tab, text="Add Enrollment", command=handle_add_enrollment)
+add_enrollment_button.place(x=105, y=110)
+
+def handle_delete_enrollment():
+    delete_enrollment(enrollment_id_entry.get())
+    refresh_enrollments_table()
+    refresh_overview_table()
+
+delete_enrollment_button = ttk.Button(enrollments_tab, text="Delete Enrollment", command=handle_delete_enrollment)
+delete_enrollment_button.place(x=245, y=110)
+
+def handle_update_enrollment():
+    update_enrollment(enrollment_id_entry.get(), enrollment_course_id_entry.get(), enrollment_student_id_entry.get(), grade_entry.get())
+    refresh_enrollments_table()
+    refresh_overview_table()
+
+update_enrollment_button = ttk.Button(enrollments_tab, text="Update Enrollment", command=handle_update_enrollment)
+update_enrollment_button.place(x=395, y=110)
+
+# teaches tab
+teaches_table = ttk.Treeview(
+    teaches_tab,
+    columns=("instructor_id", "course_id"),
+    show="headings",
+    height=10
+)
+
+teaches_table.heading("instructor_id", text="Instructor ID")
+teaches_table.column("instructor_id", width=345, anchor="center")
+
+teaches_table.heading("course_id", text="Course ID")
+teaches_table.column("course_id", width=345, anchor="center")
+
+teaches_table.place(y=150)
+
+teaches_instructor_id_label = ttk.Label(teaches_tab, text="Instructor ID:")
+teaches_instructor_id_label.place(x=20, y=30)
+
+teaches_instructor_id_entry = tk.StringVar()
+teaches_instructor_id = ttk.Entry(teaches_tab, textvariable=teaches_instructor_id_entry, width=20)
+teaches_instructor_id.place(x=110, y=27)
+
+teaches_course_id_label = ttk.Label(teaches_tab, text="Course ID:")
+teaches_course_id_label.place(x=360, y=30)
+
+teaches_course_id_entry = tk.StringVar()
+teaches_course_id = ttk.Entry(teaches_tab, textvariable=teaches_course_id_entry, width=20)
+teaches_course_id.place(x=440, y=27)
+
+def handle_add_teaches():
+    add_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+    refresh_teaches_table()
+    refresh_overview_table()
+
+add_teaches_button = ttk.Button(teaches_tab, text="Add Teaches", command=handle_add_teaches)
+add_teaches_button.place(x=120, y=110)
+
+def handle_delete_teaches():
+    delete_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+    refresh_teaches_table()
+    refresh_overview_table()
+
+delete_teaches_button = ttk.Button(teaches_tab, text="Delete Teaches", command=handle_delete_teaches)
+delete_teaches_button.place(x=260, y=110)
+
+def handle_update_teaches():
+    update_teaches(teaches_instructor_id_entry.get(), teaches_course_id_entry.get())
+    refresh_teaches_table()
+    refresh_overview_table()
+
+update_teaches_button = ttk.Button(teaches_tab, text="Update Teaches", command=handle_update_teaches)
+update_teaches_button.place(x=400, y=110)
 
 # overview tab
 overview_table = ttk.Treeview(
@@ -292,12 +414,19 @@ def refresh_instructors_table():
     for i in view_instructors():
         instructors_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
 
-# def refresh_enrollments_table():
-#     for i in enrollments_table.get_children():
-#         enrollments_table.delete(i)
+def refresh_enrollments_table():
+    for i in enrollments_table.get_children():
+        enrollments_table.delete(i)
 
-#     for i in view_enrollments():
-#         enrollments_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
+    for i in view_enrollments():
+        enrollments_table.insert("", tk.END, values=(i[0], i[1], i[2], i[3]))
+
+def refresh_teaches_table():
+    for i in teaches_table.get_children():
+        teaches_table.delete(i)
+
+    for i in view_teaches():
+        teaches_table.insert("", tk.END, values=(i[0], i[1]))
 
 def refresh_overview_table():
     for i in overview_table.get_children():
@@ -313,6 +442,8 @@ sample_data_insertion()
 refresh_students_table()
 refresh_courses_table()
 refresh_instructors_table()
+refresh_enrollments_table()
+refresh_teaches_table()
 refresh_overview_table()
 
 root.mainloop()

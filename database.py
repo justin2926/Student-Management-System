@@ -408,6 +408,57 @@ def delete_enrollment(enrollment_id):
     con.close()
 
 
+def view_teaches():
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM Teaches")
+    rows = cur.fetchall()
+
+    con.close()
+    return rows
+
+
+def add_teaches(instructor_id, course_id):
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("""
+        INSERT INTO Teaches (InstructorID, CourseID)
+        VALUES (?, ?)
+    """, (instructor_id, course_id))
+
+    con.commit()
+    con.close()
+
+# Teaches
+
+def update_teaches(old_instructor_id, old_course_id, new_instructor_id, new_course_id):
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("""
+        UPDATE Teaches
+        SET InstructorID = ?, CourseID = ?
+        WHERE InstructorID = ? AND CourseID = ?
+    """, (new_instructor_id, new_course_id, old_instructor_id, old_course_id))
+
+    con.commit()
+    con.close()
+
+
+def delete_teaches(instructor_id, course_id):
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("""
+        DELETE FROM Teaches
+        WHERE InstructorID = ? AND CourseID = ?
+    """, (instructor_id, course_id))
+
+    con.commit()
+    con.close()
+
     # Some Join Queries_______________________________________________________________
 
 # query 1
