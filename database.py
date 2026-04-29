@@ -303,6 +303,8 @@ def delete_course(course_id):
     con = get_connection()
     cur = con.cursor()
 
+    cur.execute("DELETE FROM Teaches WHERE CourseID = ?", (course_id,))
+    cur.execute("DELETE FROM Enrolls WHERE CourseID = ?", (course_id,))
     cur.execute("DELETE FROM Courses WHERE CourseID = ?", (course_id,))
 
     con.commit()
@@ -353,6 +355,7 @@ def delete_instructor(instructor_id):
     con = get_connection()
     cur = con.cursor()
 
+    cur.execute("DELETE FROM Teaches WHERE InstructorID = ?", (instructor_id,))
     cur.execute("DELETE FROM Instructor WHERE InstructorID = ?", (instructor_id,))
 
     con.commit()
