@@ -39,8 +39,8 @@ def delete_student():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        DELETE FROM Students WHERE StudentID = ?
+    """, (student_id_entry.get(),))
     conn.commit()
     conn.close()
 
@@ -48,8 +48,8 @@ def update_student():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        UPDATE Students SET FirstName = ?, LastName = ?, Major = ? WHERE StudentID = ?
+    """, (student_first_entry.get(), student_last_entry.get(), student_major_entry.get(), student_id_entry.get()))
     conn.commit()
     conn.close()
 
@@ -58,8 +58,8 @@ def add_course():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        INSERT INTO Courses (CourseID, DepartmentID, CourseName, Credits) VALUES (?, ?, ?, ?)
+    """, (course_id_entry.get(), department_id_entry.get(), course_name_entry.get(), credits_entry.get()))
     conn.commit()
     conn.close()
 
@@ -67,8 +67,8 @@ def delete_course():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        DELETE FROM Courses WHERE CourseID = ?
+    """, (course_id_entry.get(),))
     conn.commit()
     conn.close()
 
@@ -76,8 +76,8 @@ def update_course():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        UPDATE Courses SET DepartmentID = ?, CourseName = ?, Credits = ? WHERE CourseID = ?
+    """, (department_id_entry.get(), course_name_entry.get(), credits_entry.get(), course_id_entry.get()))
     conn.commit()
     conn.close()
 
@@ -86,8 +86,8 @@ def add_instructor():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        INSERT INTO Instructor (InstructorID, DepartmentID, FirstName, LastName) VALUES (?, ?, ?, ?)
+    """, (instructor_id_entry.get(), instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get()))
     conn.commit()
     conn.close()
 
@@ -95,8 +95,8 @@ def delete_instructor():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        DELETE FROM Instructor WHERE InstructorID = ?
+    """, (instructor_id_entry.get(),))
     conn.commit()
     conn.close()
 
@@ -104,8 +104,8 @@ def update_instructor():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        UPDATE Instructor SET DepartmentID = ?, FirstName = ?, LastName = ? WHERE InstructorID = ?
+    """, (instructor_department_id_entry.get(), instructor_first_entry.get(), instructor_last_entry.get(), instructor_id_entry.get()))
     conn.commit()
     conn.close()
 
@@ -113,31 +113,37 @@ def get_all_sections():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
+        SELECT * FROM Teaches
     """)
-    conn.commit()
+    rows = cursor.fetchall()
     conn.close()
+    return rows
 
 def get_all_enrollments():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
+        SELECT * FROM Enrolls
     """)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
 
 def enroll_student():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
-
+        INSERT INTO Enrolls (EnrollmentID, CourseID, StudentID, Grade) VALUES (?, ?, ?, ?)
+    """, (enrollment_id_entry.get(), enrollment_course_id_entry.get(), enrollment_student_id_entry.get(), grade_entry.get()))
+    conn.commit()
+    conn.close()
+    
 def update_grade():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        UPDATE Enrolls SET Grade = ? WHERE EnrollmentID = ?
+    """, (grade_entry.get(), enrollment_id_entry.get()))
     conn.commit()
     conn.close()
 
@@ -145,7 +151,7 @@ def delete_enrollment(enrollment_id):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        # sql query goes here
-    """)
+        DELETE FROM Enrolls WHERE EnrollmentID = ?
+    """, (enrollment_id,))
     conn.commit()
     conn.close()
