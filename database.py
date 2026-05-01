@@ -10,76 +10,72 @@ def get_connection():
 
 # creating tables
 def create_tables():
-    con = get_connection()
-    cur = con.cursor()
+    with get_connection() as con:
+        cur = con.cursor()
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Department (
-            DepartmentID INTEGER PRIMARY KEY,
-            DepartmentName TEXT NOT NULL,
-            Location TEXT NOT NULL
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Department (
+                DepartmentID INTEGER PRIMARY KEY,
+                DepartmentName TEXT NOT NULL,
+                Location TEXT NOT NULL
+            )
+        """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Students (
-            StudentID INTEGER PRIMARY KEY,
-            FirstName TEXT NOT NULL,
-            LastName TEXT NOT NULL,
-            Major TEXT NOT NULL
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Students (
+                StudentID INTEGER PRIMARY KEY,
+                FirstName TEXT NOT NULL,
+                LastName TEXT NOT NULL,
+                Major TEXT NOT NULL
+            )
+        """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Instructor (
-            InstructorID INTEGER PRIMARY KEY,
-            DepartmentID INTEGER NOT NULL,
-            FirstName TEXT NOT NULL,
-            LastName TEXT NOT NULL,
-            FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Instructor (
+                InstructorID INTEGER PRIMARY KEY,
+                DepartmentID INTEGER NOT NULL,
+                FirstName TEXT NOT NULL,
+                LastName TEXT NOT NULL,
+                FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+            )
+        """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Courses (
-            CourseID INTEGER PRIMARY KEY,
-            DepartmentID INTEGER NOT NULL,
-            CourseName TEXT NOT NULL,
-            Credits INTEGER NOT NULL,
-            FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Courses (
+                CourseID INTEGER PRIMARY KEY,
+                DepartmentID INTEGER NOT NULL,
+                CourseName TEXT NOT NULL,
+                Credits INTEGER NOT NULL,
+                FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+            )
+        """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Enrolls (
-            EnrollmentID INTEGER PRIMARY KEY,
-            CourseID INTEGER NOT NULL,
-            StudentID INTEGER NOT NULL,
-            Grade TEXT NOT NULL,
-            FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
-            FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
-            UNIQUE (CourseID, StudentID)
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Enrolls (
+                EnrollmentID INTEGER PRIMARY KEY,
+                CourseID INTEGER NOT NULL,
+                StudentID INTEGER NOT NULL,
+                Grade TEXT NOT NULL,
+                FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
+                FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+                UNIQUE (CourseID, StudentID)
+            )
+        """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Teaches (
-            InstructorID INTEGER NOT NULL,
-            CourseID INTEGER NOT NULL,
-            PRIMARY KEY (InstructorID, CourseID),
-            FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID),
-            FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
-        )
-    """)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Teaches (
+                InstructorID INTEGER NOT NULL,
+                CourseID INTEGER NOT NULL,
+                PRIMARY KEY (InstructorID, CourseID),
+                FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID),
+                FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+            )
+        """)
 
-    con.commit()
-    con.close()
+        con.commit()
 
 # inserting sample data
 def sample_data_insertion():
-    con = get_connection()
-    cur = con.cursor()
-
     departments = [
         (1, "Computer Science", "MacQuarrie Hall"),
         (2, "Mathematics", "Duncan Hall"),
@@ -188,64 +184,52 @@ def sample_data_insertion():
         (2015, 3015)
     ]
 
-    cur.executemany("INSERT OR IGNORE INTO Department VALUES (?, ?, ?)", departments)
-    cur.executemany("INSERT OR IGNORE INTO Students VALUES (?, ?, ?, ?)", students)
-    cur.executemany("INSERT OR IGNORE INTO Instructor VALUES (?, ?, ?, ?)", instructors)
-    cur.executemany("INSERT OR IGNORE INTO Courses VALUES (?, ?, ?, ?)", courses)
-    cur.executemany("INSERT OR IGNORE INTO Enrolls VALUES (?, ?, ?, ?)", enrolls)
-    cur.executemany("INSERT OR IGNORE INTO Teaches VALUES (?, ?)", teaches)
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.executemany("INSERT OR IGNORE INTO Department VALUES (?, ?, ?)", departments)
+        cur.executemany("INSERT OR IGNORE INTO Students VALUES (?, ?, ?, ?)", students)
+        cur.executemany("INSERT OR IGNORE INTO Instructor VALUES (?, ?, ?, ?)", instructors)
+        cur.executemany("INSERT OR IGNORE INTO Courses VALUES (?, ?, ?, ?)", courses)
+        cur.executemany("INSERT OR IGNORE INTO Enrolls VALUES (?, ?, ?, ?)", enrolls)
+        cur.executemany("INSERT OR IGNORE INTO Teaches VALUES (?, ?)", teaches)
+        con.commit()
     
 
 def view_students():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("SELECT * FROM Students")
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Students")
+        rows = cur.fetchall()
     return rows
 
 
 def add_student(student_id, first_name, last_name, major):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        INSERT INTO Students (StudentID, FirstName, LastName, Major)
-        VALUES (?, ?, ?, ?)
-    """, (student_id, first_name, last_name, major))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO Students (StudentID, FirstName, LastName, Major)
+            VALUES (?, ?, ?, ?)
+        """, (student_id, first_name, last_name, major))
+        con.commit()
 
 
 def update_student(student_id, first_name, last_name, major):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        UPDATE Students
-        SET FirstName = ?, LastName = ?, Major = ?
-        WHERE StudentID = ?
-    """, (first_name, last_name, major, student_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE Students
+            SET FirstName = ?, LastName = ?, Major = ?
+            WHERE StudentID = ?
+        """, (first_name, last_name, major, student_id))
+        con.commit()
 
 
 def delete_student(student_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("DELETE FROM Enrolls WHERE StudentID = ?", (student_id,))
-    cur.execute("DELETE FROM Students WHERE StudentID = ?", (student_id,))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM Enrolls WHERE StudentID = ?", (student_id,))
+        cur.execute("DELETE FROM Students WHERE StudentID = ?", (student_id,))
+        con.commit()
 
 
 def test_database():
@@ -262,257 +246,224 @@ if __name__ == "__main__":
 
 # Course 
 def view_courses():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("SELECT * FROM Courses")
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Courses")
+        rows = cur.fetchall()
     return rows
 
 
 def add_course(course_id, department_id, course_name, credits):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        INSERT INTO Courses (CourseID, DepartmentID, CourseName, Credits)
-        VALUES (?, ?, ?, ?)
-    """, (course_id, department_id, course_name, credits))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO Courses (CourseID, DepartmentID, CourseName, Credits)
+            VALUES (?, ?, ?, ?)
+        """, (course_id, department_id, course_name, credits))
+        con.commit()
 
 
 def update_course(course_id, department_id, course_name, credits):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        UPDATE Courses
-        SET DepartmentID = ?, CourseName = ?, Credits = ?
-        WHERE CourseID = ?
-    """, (department_id, course_name, credits, course_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE Courses
+            SET DepartmentID = ?, CourseName = ?, Credits = ?
+            WHERE CourseID = ?
+        """, (department_id, course_name, credits, course_id))
+        con.commit()
 
 
 def delete_course(course_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("DELETE FROM Teaches WHERE CourseID = ?", (course_id,))
-    cur.execute("DELETE FROM Enrolls WHERE CourseID = ?", (course_id,))
-    cur.execute("DELETE FROM Courses WHERE CourseID = ?", (course_id,))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM Teaches WHERE CourseID = ?", (course_id,))
+        cur.execute("DELETE FROM Enrolls WHERE CourseID = ?", (course_id,))
+        cur.execute("DELETE FROM Courses WHERE CourseID = ?", (course_id,))
+        con.commit()
 
 
 # Instructor__________________________________________________________________________ 
 
 def view_instructors():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("SELECT * FROM Instructor")
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Instructor")
+        rows = cur.fetchall()
     return rows
 
 
 def add_instructor(instructor_id, department_id, first_name, last_name):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        INSERT INTO Instructor (InstructorID, DepartmentID, FirstName, LastName)
-        VALUES (?, ?, ?, ?)
-    """, (instructor_id, department_id, first_name, last_name))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO Instructor (InstructorID, DepartmentID, FirstName, LastName)
+            VALUES (?, ?, ?, ?)
+        """, (instructor_id, department_id, first_name, last_name))
+        con.commit()
 
 
 def update_instructor(instructor_id, department_id, first_name, last_name):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        UPDATE Instructor
-        SET DepartmentID = ?, FirstName = ?, LastName = ?
-        WHERE InstructorID = ?
-    """, (department_id, first_name, last_name, instructor_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE Instructor
+            SET DepartmentID = ?, FirstName = ?, LastName = ?
+            WHERE InstructorID = ?
+        """, (department_id, first_name, last_name, instructor_id))
+        con.commit()
 
 
 def delete_instructor(instructor_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("DELETE FROM Teaches WHERE InstructorID = ?", (instructor_id,))
-    cur.execute("DELETE FROM Instructor WHERE InstructorID = ?", (instructor_id,))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM Teaches WHERE InstructorID = ?", (instructor_id,))
+        cur.execute("DELETE FROM Instructor WHERE InstructorID = ?", (instructor_id,))
+        con.commit()
 
 
 # Enrolls__________________________________________________________________________________
 
 def view_enrollments():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("SELECT * FROM Enrolls")
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Enrolls")
+        rows = cur.fetchall()
     return rows
 
 
 def add_enrollment(enrollment_id, course_id, student_id, grade):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        INSERT INTO Enrolls (EnrollmentID, CourseID, StudentID, Grade)
-        VALUES (?, ?, ?, ?)
-    """, (enrollment_id, course_id, student_id, grade))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO Enrolls (EnrollmentID, CourseID, StudentID, Grade)
+            VALUES (?, ?, ?, ?)
+        """, (enrollment_id, course_id, student_id, grade))
+        con.commit()
 
 
 def update_enrollment(enrollment_id, course_id, student_id, grade):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        UPDATE Enrolls
-        SET CourseID = ?, StudentID = ?, Grade = ?
-        WHERE EnrollmentID = ?
-    """, (course_id, student_id, grade, enrollment_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE Enrolls
+            SET CourseID = ?, StudentID = ?, Grade = ?
+            WHERE EnrollmentID = ?
+        """, (course_id, student_id, grade, enrollment_id))
+        con.commit()
 
 
 def delete_enrollment(enrollment_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("DELETE FROM Enrolls WHERE EnrollmentID = ?", (enrollment_id,))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM Enrolls WHERE EnrollmentID = ?", (enrollment_id,))
+        con.commit()
 
 
 def view_teaches():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("SELECT * FROM Teaches")
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Teaches")
+        rows = cur.fetchall()
     return rows
 
 
 def add_teaches(instructor_id, course_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        INSERT INTO Teaches (InstructorID, CourseID)
-        VALUES (?, ?)
-    """, (instructor_id, course_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO Teaches (InstructorID, CourseID)
+            VALUES (?, ?)
+        """, (instructor_id, course_id))
+        con.commit()
 
 # Teaches
 
 def update_teaches(old_instructor_id, old_course_id, new_instructor_id, new_course_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        UPDATE Teaches
-        SET InstructorID = ?, CourseID = ?
-        WHERE InstructorID = ? AND CourseID = ?
-    """, (new_instructor_id, new_course_id, old_instructor_id, old_course_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE Teaches
+            SET InstructorID = ?, CourseID = ?
+            WHERE InstructorID = ? AND CourseID = ?
+        """, (new_instructor_id, new_course_id, old_instructor_id, old_course_id))
+        con.commit()
 
 
 def delete_teaches(instructor_id, course_id):
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        DELETE FROM Teaches
-        WHERE InstructorID = ? AND CourseID = ?
-    """, (instructor_id, course_id))
-
-    con.commit()
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            DELETE FROM Teaches
+            WHERE InstructorID = ? AND CourseID = ?
+        """, (instructor_id, course_id))
+        con.commit()
 
     # Some Join Queries_______________________________________________________________
 
 # query 1
 def view_student_grades():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        SELECT
-            Students.StudentID,
-            Students.FirstName,
-            Students.LastName,
-            Courses.CourseName,
-            Enrolls.Grade
-        FROM Enrolls
-        JOIN Students
-            ON Enrolls.StudentID = Students.StudentID
-        JOIN Courses
-            ON Enrolls.CourseID = Courses.CourseID
-    """)
-
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            SELECT
+                Students.StudentID,
+                Students.FirstName,
+                Students.LastName,
+                Courses.CourseName,
+                Enrolls.Grade
+            FROM Enrolls
+            JOIN Students
+                ON Enrolls.StudentID = Students.StudentID
+            JOIN Courses
+                ON Enrolls.CourseID = Courses.CourseID
+        """)
+        rows = cur.fetchall()
     return rows
 
 # query 2
 def view_instructor_courses():
-    con = get_connection()
-    cur = con.cursor()
-
-    cur.execute("""
-        SELECT
-            Instructor.FirstName,
-            Instructor.LastName,
-            Courses.CourseName
-        FROM Teaches
-        JOIN Instructor
-            ON Teaches.InstructorID = Instructor.InstructorID
-        JOIN Courses
-            ON Teaches.CourseID = Courses.CourseID
-    """)
-
-    rows = cur.fetchall()
-
-    con.close()
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            SELECT
+                Instructor.FirstName,
+                Instructor.LastName,
+                Courses.CourseName
+            FROM Teaches
+            JOIN Instructor
+                ON Teaches.InstructorID = Instructor.InstructorID
+            JOIN Courses
+                ON Teaches.CourseID = Courses.CourseID
+        """)
+        rows = cur.fetchall()
     return rows
 
 # added another join query
 def view_overview():
+    with get_connection() as con:
+        cur = con.cursor()
+        cur.execute("""
+            SELECT
+                Students.StudentID,
+                Students.FirstName || ' ' || Students.LastName AS StudentName,
+                Courses.CourseID,
+                Courses.CourseName,
+                Instructor.InstructorID,
+                Instructor.FirstName || ' ' || Instructor.LastName AS InstructorName,
+                Students.Major,
+                Enrolls.Grade
+            FROM Enrolls
+            JOIN Students ON Enrolls.StudentID = Students.StudentID
+            JOIN Courses ON Enrolls.CourseID = Courses.CourseID
+            LEFT JOIN Teaches ON Courses.CourseID = Teaches.CourseID
+            LEFT JOIN Instructor ON Teaches.InstructorID = Instructor.InstructorID
+        """)
+        rows = cur.fetchall()
+    return rows
+
+
+def get_student_view(student_id):
     con = get_connection()
     cur = con.cursor()
 
@@ -522,16 +473,43 @@ def view_overview():
             Students.FirstName || ' ' || Students.LastName AS StudentName,
             Courses.CourseID,
             Courses.CourseName,
-            Instructor.InstructorID,
+            Courses.Credits,
             Instructor.FirstName || ' ' || Instructor.LastName AS InstructorName,
-            Students.Major,
             Enrolls.Grade
         FROM Enrolls
         JOIN Students ON Enrolls.StudentID = Students.StudentID
         JOIN Courses ON Enrolls.CourseID = Courses.CourseID
         LEFT JOIN Teaches ON Courses.CourseID = Teaches.CourseID
         LEFT JOIN Instructor ON Teaches.InstructorID = Instructor.InstructorID
-    """)
+        WHERE Students.StudentID = ?
+    """, (student_id,))
+
+    rows = cur.fetchall()
+    con.close()
+    return rows
+
+
+def get_instructor_view(instructor_id):
+    con = get_connection()
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT
+            Instructor.InstructorID,
+            Instructor.FirstName || ' ' || Instructor.LastName AS InstructorName,
+            Courses.CourseID,
+            Courses.CourseName,
+            Students.StudentID,
+            Students.FirstName || ' ' || Students.LastName AS StudentName,
+            Students.Major,
+            Enrolls.Grade
+        FROM Teaches
+        JOIN Instructor ON Teaches.InstructorID = Instructor.InstructorID
+        JOIN Courses ON Teaches.CourseID = Courses.CourseID
+        LEFT JOIN Enrolls ON Courses.CourseID = Enrolls.CourseID
+        LEFT JOIN Students ON Enrolls.StudentID = Students.StudentID
+        WHERE Instructor.InstructorID = ?
+    """, (instructor_id,))
 
     rows = cur.fetchall()
     con.close()

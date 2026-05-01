@@ -2,6 +2,167 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from database import *
 
+# login screen
+
+current_role = None
+current_user_id = None
+
+def launch_login():
+    login = tk.Tk()
+    login.title("Student Management System — Login")
+    login.geometry("400x280+560+300")
+    login.resizable(False, False)
+
+    ttk.Label(login, text="Student Management System", font=("Arial", 16, "bold")).pack(pady=(25, 5))
+    ttk.Label(login, text="Select your role to continue", font=("Arial", 10)).pack(pady=(0, 20))
+
+    role_var = tk.StringVar(value="Admin")
+
+    role_frame = ttk.Frame(login)
+    role_frame.pack()
+    ttk.Radiobutton(role_frame, text="Admin",      variable=role_var, value="Admin").grid(row=0, column=0, padx=15)
+    ttk.Radiobutton(role_frame, text="Student",    variable=role_var, value="Student").grid(row=0, column=1, padx=15)
+    ttk.Radiobutton(role_frame, text="Instructor", variable=role_var, value="Instructor").grid(row=0, column=2, padx=15)
+
+    id_frame = ttk.Frame(login)
+    id_frame.pack(pady=15)
+    id_label = ttk.Label(id_frame, text="ID (Student / Instructor):")
+    id_label.grid(row=0, column=0, padx=(0, 8))
+    id_entry = ttk.Entry(id_frame, width=12)
+    id_entry.grid(row=0, column=1)
+
+    error_label = ttk.Label(login, text="", foreground="red")
+    error_label.pack()
+
+    def on_login():
+        global current_role, current_user_id
+        role = role_var.get()
+        uid = id_entry.get().strip()
+
+        if role in ("Student", "Instructor"):
+            if not uid:
+                error_label.config(text=f"Please enter your {role} ID.")
+                return
+            if not uid.isdigit():
+                error_label.config(text="ID must be a number.")
+                return
+            uid = int(uid)
+            if role == "Student":
+                rows = get_student_view(uid)
+                if not rows:
+                    error_label.config(text="No student found with that ID.")
+                    return
+            else:
+                rows = get_instructor_view(uid)
+                if not rows:
+                    error_label.config(text="No instructor found with that ID.")
+                    return
+            current_user_id = uid
+        else:
+            current_user_id = None
+
+        current_role = role
+        login.destroy()
+
+    ttk.Button(login, text="Login", command=on_login, width=16).pack(pady=(5, 0))
+
+    login.mainloop()
+
+create_tables()
+sample_data_insertion()
+launch_login()
+
+if current_role is None:
+    import sys
+    sys.exit()
+
+# main window
+
+if current_role in ("Student", "Instructor"):
+    # read-only role view — separate simple window
+    def launch_role_view():
+        view = tk.Tk()
+        view.resizable(True, True)
+
+        if current_role == "Student":
+            rows = get_student_view(current_user_id)
+            name = rows[0][1] if rows else f"Student {current_user_id}"
+            view.title(f"My Courses — {name}")
+            view.geometry("900x500+200+150")
+
+            ttk.Label(view, text=f"Welcome, {name}", font=("Arial", 16, "bold")).pack(pady=(15, 5))
+            ttk.Label(view, text="Your enrolled courses and grades", font=("Arial", 10)).pack(pady=(0, 10))
+
+            frame = ttk.Frame(view)
+            frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+
+            scroll_y = ttk.Scrollbar(frame, orient="vertical")
+            scroll_y.pack(side="right", fill="y")
+
+            cols = ("course_id", "course_name", "credits", "instructor", "grade")
+            table = ttk.Treeview(frame, columns=cols, show="headings", yscrollcommand=scroll_y.set)
+            scroll_y.config(command=table.yview)
+
+            col_cfg = [
+                ("course_id",   "Course ID",   100),
+                ("course_name", "Course Name", 280),
+                ("credits",     "Credits",     80),
+                ("instructor",  "Instructor",  220),
+                ("grade",       "Grade",       80),
+            ]
+            for cid, text, w in col_cfg:
+                table.heading(cid, text=text)
+                table.column(cid, width=w, anchor="center")
+
+            for r in rows:
+                # r: student_id, student_name, course_id, course_name, credits, instructor_name, grade
+                table.insert("", tk.END, values=(r[2], r[3], r[4], r[5] or "N/A", r[6]))
+
+            table.pack(fill="both", expand=True)
+
+        else:  # Instructor
+            rows = get_instructor_view(current_user_id)
+            name = rows[0][1] if rows else f"Instructor {current_user_id}"
+            view.title(f"My Classes — {name}")
+            view.geometry("1000x500+200+150")
+
+            ttk.Label(view, text=f"Welcome, {name}", font=("Arial", 16, "bold")).pack(pady=(15, 5))
+            ttk.Label(view, text="Your courses and enrolled students", font=("Arial", 10)).pack(pady=(0, 10))
+
+            frame = ttk.Frame(view)
+            frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+
+            scroll_y = ttk.Scrollbar(frame, orient="vertical")
+            scroll_y.pack(side="right", fill="y")
+
+            cols = ("course_id", "course_name", "student_id", "student_name", "major", "grade")
+            table = ttk.Treeview(frame, columns=cols, show="headings", yscrollcommand=scroll_y.set)
+            scroll_y.config(command=table.yview)
+
+            col_cfg = [
+                ("course_id",    "Course ID",    90),
+                ("course_name",  "Course Name",  220),
+                ("student_id",   "Student ID",   90),
+                ("student_name", "Student Name", 180),
+                ("major",        "Major",        170),
+                ("grade",        "Grade",        80),
+            ]
+            for cid, text, w in col_cfg:
+                table.heading(cid, text=text)
+                table.column(cid, width=w, anchor="center")
+
+            for r in rows:
+                # r: instructor_id, instructor_name, course_id, course_name, student_id, student_name, major, grade
+                table.insert("", tk.END, values=(r[2], r[3], r[4] or "—", r[5] or "—", r[6] or "—", r[7] or "—"))
+
+            table.pack(fill="both", expand=True)
+
+        view.mainloop()
+
+    launch_role_view()
+    import sys
+    sys.exit()
+
 root = tk.Tk()
 root.title("Student Management System")
 root.geometry("1300x700+200+100") 
@@ -851,8 +1012,6 @@ def refresh_overview_table():
 
 con = get_connection()
 con.close()
-create_tables()
-sample_data_insertion()
 
 refresh_students_table()
 refresh_courses_table()
