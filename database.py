@@ -399,9 +399,6 @@ def delete_teaches(instructor_id, course_id):
         """, (instructor_id, course_id))
         con.commit()
 
-    # Some Join Queries_______________________________________________________________
-
-# query 1
 def view_student_grades():
     with get_connection() as con:
         cur = con.cursor()
@@ -421,7 +418,6 @@ def view_student_grades():
         rows = cur.fetchall()
     return rows
 
-# query 2
 def view_instructor_courses():
     with get_connection() as con:
         cur = con.cursor()
@@ -439,7 +435,6 @@ def view_instructor_courses():
         rows = cur.fetchall()
     return rows
 
-# added another join query
 def view_overview():
     with get_connection() as con:
         cur = con.cursor()
@@ -461,7 +456,6 @@ def view_overview():
         """)
         rows = cur.fetchall()
     return rows
-
 
 def get_student_view(student_id):
     con = get_connection()
@@ -487,7 +481,6 @@ def get_student_view(student_id):
     rows = cur.fetchall()
     con.close()
     return rows
-
 
 def get_instructor_view(instructor_id):
     con = get_connection()
