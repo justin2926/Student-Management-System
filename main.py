@@ -48,8 +48,8 @@ def launch_login():
                 return
             uid = int(uid)
             if role == "Student":
-                rows = get_student_view(uid)
-                if not rows:
+               rows = view_students()
+               if not any(str(r[0]) == str(uid) for r in rows):
                     error_label.config(text="No student found with that ID.")
                     return
             else:
@@ -86,7 +86,10 @@ if current_role in ("Student", "Instructor"):
 
         if current_role == "Student":
             rows = get_student_view(current_user_id)
-            name = rows[0][1] if rows else f"Student {current_user_id}"
+
+            student_rows = view_students()
+            student = next((r for r in student_rows if str(r[0]) == str(current_user_id)), None)
+            name = f"{student[1]} {student[2]}" if student else f"Student {current_user_id}"
             view.title(f"My Courses — {name}")
             view.geometry("900x500+200+150")
 
