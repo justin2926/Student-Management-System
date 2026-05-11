@@ -448,11 +448,12 @@ def view_overview():
                 Instructor.FirstName || ' ' || Instructor.LastName AS InstructorName,
                 Students.Major,
                 Enrolls.Grade
-            FROM Enrolls
-            JOIN Students ON Enrolls.StudentID = Students.StudentID
-            JOIN Courses ON Enrolls.CourseID = Courses.CourseID
+            FROM Students
+            LEFT JOIN Enrolls ON Students.StudentID = Enrolls.StudentID
+            LEFT JOIN Courses ON Enrolls.CourseID = Courses.CourseID
             LEFT JOIN Teaches ON Courses.CourseID = Teaches.CourseID
             LEFT JOIN Instructor ON Teaches.InstructorID = Instructor.InstructorID
+            ORDER BY Students.StudentID
         """)
         rows = cur.fetchall()
     return rows
